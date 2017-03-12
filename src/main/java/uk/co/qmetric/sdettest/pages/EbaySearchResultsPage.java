@@ -30,13 +30,16 @@ public class EbaySearchResultsPage extends EbayPage {
     @FindBy(xpath = "id('cbelm')/div[1]/div[2]/a[1]")
     private WebElement auctionButton;
 
+    @FindBy(xpath = "id('cbelm')/div[1]/div[2]/a[2]")
+    private WebElement buyItNowButton;
+
     private static final String LISTING_TIME_FORMAT = "dd-MMM HH:mm";
     private static final String SEARCH_RESULT_BY_INDEX = "id('ListViewInner')/li[%s]/h3";
     private static final String RESULT_PRICE_BY_INDEX =
             "//li[contains(@class, 'sresult')][%s]//li[contains(@class, 'prc')]/span";
     private static final String RESULT_LISTING_DATE_BY_INDEX =
             "id('ListViewInner')/li[%s]//span[@class=\"tme\"]/span";
-    private static final String RESULT_BIDS_BY_INDEX =
+    private static final String RESULT_TYPE_BY_INDEX =
             "//li[contains(@class, 'sresult')][%s]//li[contains(@class, 'lvformat')]/span";
 
     public EbaySearchResultsPage(WebDriver driver) {
@@ -77,6 +80,11 @@ public class EbaySearchResultsPage extends EbayPage {
         return new EbaySearchResultsPage(driver);
     }
 
+    public EbaySearchResultsPage clickBuyItNowButton() {
+        buyItNowButton.click();
+        return new EbaySearchResultsPage(driver);
+    }
+
     public String getFirstResultTitle() {
         try {
             return firstSearchResult.getText();
@@ -108,6 +116,6 @@ public class EbaySearchResultsPage extends EbayPage {
     }
 
     public boolean isResultAnAuction(int n) {
-        return getTextByIndex(firstSearchResult, n, RESULT_BIDS_BY_INDEX).contains("bids");
+        return getTextByIndex(firstSearchResult, n, RESULT_TYPE_BY_INDEX).contains("bid");
     }
 }

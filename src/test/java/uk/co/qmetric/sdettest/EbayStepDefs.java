@@ -70,7 +70,11 @@ public class EbayStepDefs {
     @When("I click the Auction button")
     public void whenIClickTheAuctionButton() {
         currentPage = ((EbaySearchResultsPage)currentPage).clickAuctionButton();
+    }
 
+    @When("I click the Buy It Now button")
+    public void whenIClickTheBuyItNowButton() {
+        currentPage = ((EbaySearchResultsPage)currentPage).clickBuyItNowButton();
     }
 
     @Then("the results display \"(.+)\"")
@@ -105,7 +109,7 @@ public class EbayStepDefs {
     }
 
     @Then("are ordered by listing date")
-    public void ThenResultsAreOrderedByListingDate() {
+    public void thenResultsAreOrderedByListingDate() {
         Date firstDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(1);
         Date secondDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(2);
         Date thirdDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(3);
@@ -116,10 +120,20 @@ public class EbayStepDefs {
 
     @Then("are all sold by auction")
     public void thenAreAllSoldByAuction() {
-        // We check the top 10 are sold by auction
+        // we consider the top 10 to be 'all'
+        verifyTopTenAreAuction(true);
+    }
+
+    @Then("are all sold as Buy It Now")
+    public void thenAllAreSoldAsBuyItNow() {
+        // What isn't an auction is "buy it now"
+        verifyTopTenAreAuction(false);
+    }
+
+    private void verifyTopTenAreAuction(boolean expectedResult) {
         for (int i = 1; i <= 10; i++) {
             boolean isAuction = ((EbaySearchResultsPage)currentPage).isResultAnAuction(i);
-            assertThat("Result " + i + " was not an auction", isAuction, is(true));
+            assertThat("Result " + i + " was not an auction", isAuction, is(expectedResult));
         }
     }
 

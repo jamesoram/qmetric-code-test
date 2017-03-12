@@ -46,3 +46,10 @@ Scenario: A new customer can search for auctions
   And I click the Auction button
   Then the results display "iPhone"
   And are all sold by auction
+
+Scenario: A new customer can search for auctions
+  Given I am on the eBay landing page
+  When I enter "iPhone" into the search bar
+  And I click the Buy It Now button
+  Then the results display "iPhone"
+  And are all sold as Buy It Now
