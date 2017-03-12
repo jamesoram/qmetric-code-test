@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import uk.co.qmetric.sdettest.pages.EbayPage;
 import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 
+import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
 import static uk.co.qmetric.sdettest.matchers.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
 
@@ -59,6 +60,11 @@ public class EbayStepDefs {
 
     @Then("are ordered by price")
     public void areOrderedByPrice() {
+        float firstPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(1).replace("£", ""));
+        float secondPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(2).replace("£", ""));
+        float thirdPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(3).replace("£", ""));
 
+        assertThat("Prices are not in ascending order", firstPrice, lessThan(secondPrice));
+        assertThat("Prices are not in ascending order", secondPrice, lessThan(thirdPrice));
     }
 }

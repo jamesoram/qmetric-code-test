@@ -3,7 +3,6 @@ Feature: As a new customer
   and find the cheapest available option
   and use the filtering options
 
-
 Scenario: A new customer can search for items ordered by price
   Given I am on the eBay landing page
   When I enter "iPhone" into the search bar
