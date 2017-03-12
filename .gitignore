@@ -17,3 +17,4 @@ bin
 **/.settings
 
 **/pom.xml.versionsBackup
+*.log
