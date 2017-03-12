@@ -10,6 +10,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import uk.co.qmetric.sdettest.pages.EbayPage;
 import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 
+import java.util.Date;
+
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -59,6 +61,11 @@ public class EbayStepDefs {
         currentPage = ((EbaySearchResultsPage)currentPage).sortByHighestPrice();
     }
 
+    @When("I sort by newly listed")
+    public void whenISortByNewlyListed() {
+        currentPage = ((EbaySearchResultsPage)currentPage).sortByNewlyListed();
+    }
+
     @Then("the results display \"(.+)\"")
     public void thenResultsDisplay(String expectedResult) {
         // verify top 3 results
@@ -88,6 +95,16 @@ public class EbayStepDefs {
 
         assertThat("Prices are not in descending order", firstPrice, greaterThanOrEqualTo(secondPrice));
         assertThat("Prices are not in descending order", secondPrice, greaterThanOrEqualTo(thirdPrice));
+    }
+
+    @Then("are ordered by listing date")
+    public void ThenResultsAreOrderedByListingDate() {
+        Date firstDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(1);
+        Date secondDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(2);
+        Date thirdDate = ((EbaySearchResultsPage)currentPage).getResultListingDateByIndex(3);
+
+        assertThat("Items are not ordered by date", firstDate, greaterThanOrEqualTo(secondDate));
+        assertThat("Items are not ordered by date", secondDate, greaterThanOrEqualTo(thirdDate));
     }
 
     private float getPrice(int resultIndex) {

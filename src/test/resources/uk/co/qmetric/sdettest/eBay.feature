@@ -3,6 +3,8 @@ Feature: As a new customer
   and find the cheapest available option
   and use the filtering options
 
+  # There is no definition of "best match"
+  # I'm going to assume it means the first result contains the search text
 Scenario: A new customer will find a best match by default
   Given I am on the eBay landing page
   When I enter "iPhone" into the search bar
@@ -28,3 +30,12 @@ Scenario: A new customer can search for items ordered by highest price
   And I sort by highest price
   Then the results display "iPhone"
   And are ordered by highest to lowest price
+
+# There is no clear definition of what "newly listed" means.
+# I'm going to assume it is an order by date.
+Scenario: A new customer can search for newly listed items
+  Given I am on the eBay landing page
+  When I enter "iPhone" into the search bar
+  And I sort by newly listed
+  Then the results display "iPhone"
+  And are ordered by listing date
