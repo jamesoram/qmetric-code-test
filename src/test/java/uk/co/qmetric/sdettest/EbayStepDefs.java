@@ -10,8 +10,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import uk.co.qmetric.sdettest.pages.EbayPage;
 import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.lessThan;
+import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
+import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 import static uk.co.qmetric.sdettest.matchers.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
 
@@ -75,8 +75,8 @@ public class EbayStepDefs {
         float secondPrice = getPrice(2);
         float thirdPrice = getPrice(3);
 
-        assertThat("Prices are not in ascending order", firstPrice, lessThan(secondPrice));
-        assertThat("Prices are not in ascending order", secondPrice, lessThan(thirdPrice));
+        assertThat("Prices are not in ascending order", firstPrice, lessThanOrEqualTo(secondPrice));
+        assertThat("Prices are not in ascending order", secondPrice, lessThanOrEqualTo(thirdPrice));
     }
 
     @Then("are ordered by highest to lowest price")
@@ -85,8 +85,8 @@ public class EbayStepDefs {
         float secondPrice = getPrice(2);
         float thirdPrice = getPrice(3);
 
-        assertThat("Prices are not in descending order", firstPrice, greaterThan(secondPrice));
-        assertThat("Prices are not in descending order", secondPrice, greaterThan(thirdPrice));
+        assertThat("Prices are not in descending order", firstPrice, greaterThanOrEqualTo(secondPrice));
+        assertThat("Prices are not in descending order", secondPrice, greaterThanOrEqualTo(thirdPrice));
     }
 
     private float getPrice(int resultIndex) {
