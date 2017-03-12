@@ -13,6 +13,7 @@ import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static uk.co.qmetric.sdettest.matchers.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
 
 public class EbayStepDefs {
@@ -90,9 +91,17 @@ public class EbayStepDefs {
     }
 
     private float getPrice(int resultIndex) {
-        return Float.parseFloat(((EbaySearchResultsPage)currentPage)
-                .getNthResultPrice(resultIndex)
-                .replace("£", "")
-                .replace(",", ""));
+        try {
+            String price = ((EbaySearchResultsPage) currentPage)
+                    .getNthResultPrice(resultIndex)
+                    .replace("£", "")
+                    .replace(",", "");
+            return Float.parseFloat(price);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+            fail("Invalid price found on result number " + resultIndex);
+            return  0f;
+        }
     }
 }
