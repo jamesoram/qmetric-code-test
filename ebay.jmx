@@ -28,6 +28,32 @@
 Make test last 1 minute (see Scheduler)</stringProp>
       </ThreadGroup>
       <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="items" elementType="Argument">
+              <stringProp name="Argument.name">items</stringProp>
+              <stringProp name="Argument.value">iphone,pixel,galaxy,htc,phone,nokia,nexus,motorola</stringProp>
+              <stringProp name="Argument.desc">phone models</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="script">import java.util.Random;
+
+String[] items = (vars.get(&quot;items&quot;)).split(&quot;,&quot;);
+
+int idx = new Random().nextInt(items.length);
+String item = (items[idx]);
+
+vars.put(&quot;item&quot;, item);
+</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
         <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
           <collectionProp name="CookieManager.cookies"/>
           <boolProp name="CookieManager.clearEachIteration">false</boolProp>
@@ -61,7 +87,7 @@ Make test last 1 minute (see Scheduler)</stringProp>
             <collectionProp name="Arguments.arguments">
               <elementProp name="_nkw" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">iphone</stringProp>
+                <stringProp name="Argument.value">${item}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">_nkw</stringProp>
