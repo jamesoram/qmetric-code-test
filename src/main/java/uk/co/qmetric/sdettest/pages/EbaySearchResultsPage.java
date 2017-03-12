@@ -12,6 +12,12 @@ public class EbaySearchResultsPage extends EbayPage {
     @FindBy(xpath = "id('SortMenu')/li[1]/a")
     private WebElement lowestPricePPLink;
 
+    @FindBy(xpath = "id('SortMenu')/li[2]/a")
+    private WebElement highestPricePPLink;
+
+    @FindBy(xpath = "id('SortMenu')/li[3]/a")
+    private WebElement highestPriceLink;
+
     @FindBy(xpath = "id('ListViewInner')/li[1]/h3")
     private WebElement firstSearchResult;
 
@@ -31,6 +37,18 @@ public class EbaySearchResultsPage extends EbayPage {
     public EbaySearchResultsPage sortByLowestPriceAndPp() {
         clickSortMenu();
         lowestPricePPLink.click();
+        return this;
+    }
+
+    public EbaySearchResultsPage sortByHighestPriceAndPp() {
+        clickSortMenu();
+        highestPricePPLink.click();
+        return this;
+    }
+
+    public EbaySearchResultsPage sortByHighestPrice() {
+        clickSortMenu();
+        highestPriceLink.click();
         return this;
     }
 

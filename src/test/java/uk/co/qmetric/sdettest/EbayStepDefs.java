@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import uk.co.qmetric.sdettest.pages.EbayPage;
 import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 
+import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
 import static uk.co.qmetric.sdettest.matchers.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
@@ -47,6 +48,16 @@ public class EbayStepDefs {
         currentPage = ((EbaySearchResultsPage)currentPage).sortByLowestPriceAndPp();
     }
 
+    @When("^I sort by highest price and PP$")
+    public void whenIFilterByHighestPriceAndPp() {
+        currentPage = ((EbaySearchResultsPage)currentPage).sortByHighestPriceAndPp();
+    }
+
+    @When("^I sort by highest price$")
+    public void whenIFilterByHighestPrice() {
+        currentPage = ((EbaySearchResultsPage)currentPage).sortByHighestPrice();
+    }
+
     @Then("the results display \"(.+)\"")
     public void thenResultsDisplay(String expectedResult) {
         // verify top 3 results
@@ -58,13 +69,30 @@ public class EbayStepDefs {
         }
     }
 
-    @Then("are ordered by price")
-    public void areOrderedByPrice() {
-        float firstPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(1).replace("£", ""));
-        float secondPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(2).replace("£", ""));
-        float thirdPrice = Float.parseFloat(((EbaySearchResultsPage)currentPage).getNthResultPrice(3).replace("£", ""));
+    @Then("are ordered by lowest to highest price")
+    public void areOrderedByLowestPrice() {
+        float firstPrice = getPrice(1);
+        float secondPrice = getPrice(2);
+        float thirdPrice = getPrice(3);
 
         assertThat("Prices are not in ascending order", firstPrice, lessThan(secondPrice));
         assertThat("Prices are not in ascending order", secondPrice, lessThan(thirdPrice));
+    }
+
+    @Then("are ordered by highest to lowest price")
+    public void areOrderedByHighestPrice() {
+        float firstPrice = getPrice(1);
+        float secondPrice = getPrice(2);
+        float thirdPrice = getPrice(3);
+
+        assertThat("Prices are not in descending order", firstPrice, greaterThan(secondPrice));
+        assertThat("Prices are not in descending order", secondPrice, greaterThan(thirdPrice));
+    }
+
+    private float getPrice(int resultIndex) {
+        return Float.parseFloat(((EbaySearchResultsPage)currentPage)
+                .getNthResultPrice(resultIndex)
+                .replace("£", "")
+                .replace(",", ""));
     }
 }
