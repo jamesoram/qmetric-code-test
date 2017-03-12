@@ -13,8 +13,7 @@ import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
-import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
+import static org.hamcrest.number.OrderingComparison.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static uk.co.qmetric.sdettest.matchers.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
@@ -77,7 +76,7 @@ public class EbayStepDefs {
         currentPage = ((EbaySearchResultsPage)currentPage).clickBuyItNowButton();
     }
 
-    @Then("the results display \"(.+)\"")
+    @Then("the results display \"(.+)\" and a price")
     public void thenResultsDisplay(String expectedResult) {
         // verify top 3 results
         for (int i = 1; i <= 3; i++) {
@@ -85,6 +84,7 @@ public class EbayStepDefs {
 
             assertThat("Result number " + i + " does not contain " + expectedResult,
                     actualResult, containsIgnoringCase(expectedResult));
+            assertThat("Result doesn't have a price", getPrice(i), greaterThanOrEqualTo(0f));
         }
     }
 
@@ -96,6 +96,11 @@ public class EbayStepDefs {
 
         assertThat("Prices are not in ascending order", firstPrice, lessThanOrEqualTo(secondPrice));
         assertThat("Prices are not in ascending order", secondPrice, lessThanOrEqualTo(thirdPrice));
+
+        // We are going to hope that the first result has free P&P
+        // however, this is not good unless we can control the test data
+        boolean hasFreePp = ((EbaySearchResultsPage)currentPage).firstResultHasFreePp();
+        assertThat("First item doesn't have free P&P", hasFreePp, is(true));
     }
 
     @Then("are ordered by highest to lowest price")
@@ -122,6 +127,8 @@ public class EbayStepDefs {
     public void thenAreAllSoldByAuction() {
         // we consider the top 10 to be 'all'
         verifyTopTenAreAuction(true);
+        int bidsOnFirstItem = ((EbaySearchResultsPage)currentPage).getBidsOnFirstItem();
+        assertThat("First item doesn't have bids", bidsOnFirstItem, greaterThanOrEqualTo(0));
     }
 
     @Then("are all sold as Buy It Now")
@@ -142,7 +149,8 @@ public class EbayStepDefs {
             String price = ((EbaySearchResultsPage) currentPage)
                     .getNthResultPrice(resultIndex)
                     .replace("£", "")
-                    .replace(",", "");
+                    .replace(",", "")
+                    .split(" ")[0];
             return Float.parseFloat(price);
         } catch (Exception e) {
             e.printStackTrace();

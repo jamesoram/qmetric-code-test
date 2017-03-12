@@ -33,6 +33,12 @@ public class EbaySearchResultsPage extends EbayPage {
     @FindBy(xpath = "id('cbelm')/div[1]/div[2]/a[2]")
     private WebElement buyItNowButton;
 
+    @FindBy(xpath = "//li[contains(@class, 'sresult')][1]//li[contains(@class, 'lvshipping')]/span/span")
+    private WebElement firstResultShippingPrice;
+
+    @FindBy(xpath = "//li[contains(@class, 'sresult')][1]//li[contains(@class, 'lvformat')]/span")
+    private WebElement firstResultBids;
+
     private static final String LISTING_TIME_FORMAT = "dd-MMM HH:mm";
     private static final String SEARCH_RESULT_BY_INDEX = "id('ListViewInner')/li[%s]/h3";
     private static final String RESULT_PRICE_BY_INDEX =
@@ -117,5 +123,19 @@ public class EbaySearchResultsPage extends EbayPage {
 
     public boolean isResultAnAuction(int n) {
         return getTextByIndex(firstSearchResult, n, RESULT_TYPE_BY_INDEX).contains("bid");
+    }
+
+    public boolean firstResultHasFreePp() {
+        return firstResultShippingPrice.getText().contains("Free");
+    }
+
+    public int getBidsOnFirstItem() {
+        try {
+            return Integer.parseInt(firstResultBids.getText().replace(" bids", ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+            throw new RuntimeException("Could not get number of bids for first search result");
+        }
     }
 }
