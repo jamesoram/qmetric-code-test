@@ -39,3 +39,10 @@ Scenario: A new customer can search for newly listed items
   And I sort by newly listed
   Then the results display "iPhone"
   And are ordered by listing date
+
+Scenario: A new customer can search for auctions
+  Given I am on the eBay landing page
+  When I enter "iPhone" into the search bar
+  And I click the Auction button
+  Then the results display "iPhone"
+  And are all sold by auction

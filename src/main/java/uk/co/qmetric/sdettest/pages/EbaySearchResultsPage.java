@@ -27,12 +27,17 @@ public class EbaySearchResultsPage extends EbayPage {
     @FindBy(xpath = "id('ListViewInner')/li[1]/h3")
     private WebElement firstSearchResult;
 
+    @FindBy(xpath = "id('cbelm')/div[1]/div[2]/a[1]")
+    private WebElement auctionButton;
+
     private static final String LISTING_TIME_FORMAT = "dd-MMM HH:mm";
     private static final String SEARCH_RESULT_BY_INDEX = "id('ListViewInner')/li[%s]/h3";
     private static final String RESULT_PRICE_BY_INDEX =
             "//li[contains(@class, 'sresult')][%s]//li[contains(@class, 'prc')]/span";
     private static final String RESULT_LISTING_DATE_BY_INDEX =
             "id('ListViewInner')/li[%s]//span[@class=\"tme\"]/span";
+    private static final String RESULT_BIDS_BY_INDEX =
+            "//li[contains(@class, 'sresult')][%s]//li[contains(@class, 'lvformat')]/span";
 
     public EbaySearchResultsPage(WebDriver driver) {
         super(driver);
@@ -46,25 +51,30 @@ public class EbaySearchResultsPage extends EbayPage {
     public EbaySearchResultsPage sortByLowestPriceAndPp() {
         clickSortMenu();
         lowestPricePPLink.click();
-        return this;
+        return new EbaySearchResultsPage(driver);
     }
 
     public EbaySearchResultsPage sortByHighestPriceAndPp() {
         clickSortMenu();
         highestPricePPLink.click();
-        return this;
+        return new EbaySearchResultsPage(driver);
     }
 
     public EbaySearchResultsPage sortByHighestPrice() {
         clickSortMenu();
         highestPriceLink.click();
-        return this;
+        return new EbaySearchResultsPage(driver);
     }
 
     public EbaySearchResultsPage sortByNewlyListed() {
         clickSortMenu();
         newlyListedLink.click();
-        return this;
+        return new EbaySearchResultsPage(driver);
+    }
+
+    public EbaySearchResultsPage clickAuctionButton() {
+        auctionButton.click();
+        return new EbaySearchResultsPage(driver);
     }
 
     public String getFirstResultTitle() {
@@ -95,5 +105,9 @@ public class EbaySearchResultsPage extends EbayPage {
             System.err.println(e.getMessage());
             throw new RuntimeException("Invalid listing date");
         }
+    }
+
+    public boolean isResultAnAuction(int n) {
+        return getTextByIndex(firstSearchResult, n, RESULT_BIDS_BY_INDEX).contains("bids");
     }
 }

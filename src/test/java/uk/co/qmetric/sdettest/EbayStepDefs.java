@@ -12,6 +12,7 @@ import uk.co.qmetric.sdettest.pages.EbaySearchResultsPage;
 
 import java.util.Date;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -66,6 +67,12 @@ public class EbayStepDefs {
         currentPage = ((EbaySearchResultsPage)currentPage).sortByNewlyListed();
     }
 
+    @When("I click the Auction button")
+    public void whenIClickTheAuctionButton() {
+        currentPage = ((EbaySearchResultsPage)currentPage).clickAuctionButton();
+
+    }
+
     @Then("the results display \"(.+)\"")
     public void thenResultsDisplay(String expectedResult) {
         // verify top 3 results
@@ -105,6 +112,15 @@ public class EbayStepDefs {
 
         assertThat("Items are not ordered by date", firstDate, greaterThanOrEqualTo(secondDate));
         assertThat("Items are not ordered by date", secondDate, greaterThanOrEqualTo(thirdDate));
+    }
+
+    @Then("are all sold by auction")
+    public void thenAreAllSoldByAuction() {
+        // We check the top 10 are sold by auction
+        for (int i = 1; i <= 10; i++) {
+            boolean isAuction = ((EbaySearchResultsPage)currentPage).isResultAnAuction(i);
+            assertThat("Result " + i + " was not an auction", isAuction, is(true));
+        }
     }
 
     private float getPrice(int resultIndex) {
