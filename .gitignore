@@ -18,3 +18,5 @@ bin
 
 **/pom.xml.versionsBackup
 *.log
+graph-results
+
